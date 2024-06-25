@@ -6,17 +6,14 @@ dotenv.config();
 
 const secretKey = process.env.SECRET_KEY;
 
-const registrarAsistencia = async (req, res) => {
+export const registrarAsistencia = async (req, res) => {
     const { qrToken } = req.body;
     try {
-        //decodifica el token JWT 
         const decoded = jwt.verify(qrToken, secretKey);
 
-        // Obtener fecha y hora en formato adecuado
         const fechaActual = new Date();
-        //2024-03-24T08:00:00.000Z --- T es el delimitador que separa la fecha de la hora.
-        const fecha = fechaActual.toISOString().split('T')[0]; // Formato 'YYYY-MM-DD'
-        const hora = fechaActual.toTimeString().split(' ')[0]; // Formato 'HH:MM:SS'
+        const fecha = fechaActual.toISOString().split('T')[0];
+        const hora = fechaActual.toTimeString().split(' ')[0];
 
         const nuevaAsistencia = await TablaAsistencia.create({
             ProfesorID: decoded.id,
@@ -26,7 +23,6 @@ const registrarAsistencia = async (req, res) => {
 
         return res.status(200).json({
             message: 'Asistencia registrada con éxito',
-          //  data: nuevaAsistencia
         });
     } catch (error) {
         if (error instanceof jwt.JsonWebTokenError) {
@@ -38,4 +34,18 @@ const registrarAsistencia = async (req, res) => {
     }
 };
 
-export default registrarAsistencia;
+export const contarAsistencias = async (req, res) => {
+    const { profesorId } = req.params;
+    try {
+        const totalAsistencias = await TablaAsistencia.count({
+            where: { ProfesorID: profesorId }
+        });
+        return res.status(200).json({
+            message: `Total de asistencias del profesor con ID ${profesorId}`,
+            totalAsistencias
+        });
+    } catch (error) {
+        console.error('Error al contar asistencias:', error);
+        return res.status(500).json({ message: 'Error al procesar la solicitud' });
+    }
+};
