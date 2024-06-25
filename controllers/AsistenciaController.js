@@ -49,3 +49,20 @@ export const contarAsistencias = async (req, res) => {
         return res.status(500).json({ message: 'Error al procesar la solicitud' });
     }
 };
+
+export const contarInasistencias = async (req, res) => {
+    const { profesorId } = req.params;
+    try {
+        const totalInasistencias = await TablaAsistencia.count({
+            where: { ProfesorID: profesorId, inasistencias: true }
+        });
+        return res.status(200).json({
+            message: `Total de inasistencias del profesor con ID ${profesorId}`,
+            totalInasistencias
+        });
+    } catch (error) {
+        console.error('Error al contar inasistencias:', error);
+        return res.status(500).json({ message: 'Error al procesar la solicitud' });
+    }
+};
+

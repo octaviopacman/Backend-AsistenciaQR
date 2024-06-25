@@ -1,7 +1,7 @@
 import express from 'express'
 import { createprofesor, deleteprofesor, getAllprofesores, getprofesor, updateprofesor } from "../controllers/ProfesorController.js"
 import login from '../controllers/LoginController.js';
-import {contarAsistencias, registrarAsistencia} from '../controllers/AsistenciaController.js';
+import {contarAsistencias, registrarAsistencia, contarInasistencias} from '../controllers/AsistenciaController.js';
 
 const router = express.Router();
 
@@ -12,7 +12,9 @@ router.put('/:id', updateprofesor);
 router.delete('/:id', deleteprofesor);
 router.post('/login', login);
 router.post('/login/asistencia', registrarAsistencia);
-router.get('/login/contarAsistencias/:profesorId', contarAsistencias)
+router.get('/login/contarAsistencias/:profesorId', contarAsistencias);
+router.get('/login/contarInasistencias/:profesorId', contarInasistencias);
+
 
 export default router;
 
