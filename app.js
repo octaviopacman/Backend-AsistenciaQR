@@ -16,6 +16,7 @@ app.use(cors(/* {
 
 app.use(express.json());
 app.use('/profesores', Routes);
+app.post('/login', login);
 app.post('/login/asistencia', registrarAsistencia);
 app.get('/login/contarAsistencias/:profesorId', contarAsistenciasEinasistencias); 
 
