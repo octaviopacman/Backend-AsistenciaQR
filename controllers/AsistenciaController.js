@@ -40,7 +40,7 @@ export const registrarAsistencia = async (req, res) => {
     }
 };
 
-export const contarAsistenciasEInasistencias = async (req, res) => {
+export const contarAsistenciasEinasistencias = async (req, res) => {
     const { profesorId } = req.params;
     try {
         const totalAsistencias = await TablaAsistencia.count({
