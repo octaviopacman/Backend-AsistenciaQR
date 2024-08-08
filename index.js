@@ -28,6 +28,10 @@ try {
     console.log(`El error de conexion es: ${error}`);
 }
 
+app.get("/", (req, res) => {
+    res.send(`App is working fine`);
+  });
+
 app.listen(8000, () => {
     console.log(' Server UP running in http://localhost:8000/');
 });
