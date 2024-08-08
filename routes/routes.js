@@ -10,7 +10,7 @@ router.get('/:id', getprofesor);
 router.post('/', createprofesor);
 router.put('/:id', updateprofesor);
 router.delete('/:id', deleteprofesor);
-router.post('/login', login);
+router.post('/login',login);
 router.post('/login/asistencia', registrarAsistencia);
 router.get('/login/contarAsistencias/:profesorId', contarAsistenciasEinasistencias);
 
