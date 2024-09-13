@@ -1,5 +1,4 @@
 //importamos el modelo de la bd
-import connection from 'express-myconnection';
 import { TablaProfesor } from '../models/ModelProfesor.js';
 import TablaHorario  from '../models/ModelHorario.js';
 import  {TablaAsistencia}  from '../models/ModelAsistencia.js';
