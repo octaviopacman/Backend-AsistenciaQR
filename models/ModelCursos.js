@@ -5,7 +5,7 @@ import db from "../database/db.js";
 import { DataTypes } from "sequelize";
 
 // Modelo para la tabla 'cursos'
-export const TablaCurso = db.define('cursos', {
+const TablaCurso = db.define('cursos', {
     CursoID: {
       type: DataTypes.INTEGER,
       primaryKey: true,

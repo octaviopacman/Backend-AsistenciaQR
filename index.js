@@ -5,6 +5,7 @@ import Routes from './routes/routes.js'//enrutador
 import { registrarAsistencia, contarAsistenciasEinasistencias} from './controllers/AsistenciaController.js';
 import login from './controllers/LoginController.js';
 
+
 const app = express();
 
 app.use(express.urlencoded({ extended: true }));
@@ -15,10 +16,7 @@ app.use(cors(/* {
 } */));
 
 app.use(express.json());
-app.use('/profesores', Routes);
-app.post('/login', login);
-app.post('/login/asistencia', registrarAsistencia);
-app.get('/login/contarAsistencias/:profesorId', contarAsistenciasEinasistencias); 
+app.use('/api', Routes);
 
 try {
     db.authenticate();
