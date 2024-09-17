@@ -8,6 +8,7 @@ import {insertarMateria, ListadoMaterias} from '../controllers/MateriasControlle
 
 const router = express.Router();
 
+//http://localhost:8000/api
 /* Rutas para Profesores */
 router.get('/profesores', getAllprofesores); // Obtiene todos los profesores
 router.get('/profesores/:id', getprofesor);  // Obtiene un profesor por ID
