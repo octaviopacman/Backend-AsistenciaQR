@@ -18,7 +18,7 @@ router.delete('/profesores/:id', deleteprofesor); // Elimina un profesor por ID
 
 /* Rutas para Asistencia */
 router.post('/login/asistencia', registrarAsistencia);  // Registra la asistencia
-router.get('/login/contarAsistencias/:profesorId', contarAsistenciasEinasistencias); // Cuenta asistencias por profesor
+router.get('/login/contarasistencias/:profesorId', contarAsistenciasEinasistencias); // Cuenta asistencias por profesor
 
 /* Rutas para Cursos */
 router.get('/listado/cursos', ListadoCursos); // todos los cursos
