@@ -56,6 +56,6 @@ export const contarAsistenciasEinasistencias = async (req, res) => {
         });
     } catch (error) {
         console.error('Error al contar asistencias e inasistencias:', error);
-        return res.status(500).json({ message: 'Error al procesar la solicitud' });
+        return res.status(500).json({ message: `Error al procesar la solicitud: ${error.message}` });
     }
 };
