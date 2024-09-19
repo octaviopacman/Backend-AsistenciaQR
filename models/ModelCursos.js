@@ -1,21 +1,20 @@
-//ModelCursos
-//importamos la conexion a la DB
+// Importamos la conexión a la DB
 import db from "../database/db.js";
-//iimportamos sequelize
+// Importamos Sequelize
 import { DataTypes } from "sequelize";
 
 // Modelo para la tabla 'cursos'
 const TablaCurso = db.define('cursos', {
-    CursoID: {
+    cursoid: {  // Cambiado a minúsculas
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true
     },
-    Anio: {
+    anio: {  // Cambiado a minúsculas
       type: DataTypes.INTEGER,
       allowNull: false
     },
-    Division: {
+    division: {  // Cambiado a minúsculas
       type: DataTypes.STRING(10),
       allowNull: true
     }

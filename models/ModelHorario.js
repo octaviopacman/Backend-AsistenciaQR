@@ -1,49 +1,48 @@
-///ModelHorario
-// Importamo la conexión a la DB
+// Importamos la conexión a la DB
 import db from "../database/db.js";
 // Importamos Sequelize
 import { DataTypes } from "sequelize";
 
 // Modelo para la tabla 'horarios'
 const TablaHorario = db.define('horarios', {
-  HorarioID: {
+  horarioid: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true
   },
-  Dia: {
+  dia: {
     type: DataTypes.STRING(10),
     allowNull: true
   },
-  CursoID: {
+  cursoid: {  // Cambiado a minúsculas
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
       model: 'cursos',
-      key: 'CursoID'
+      key: 'cursoid'  // Cambiado a minúsculas
     }
   },
-  ProfesorID: {
+  profesorid: {  // Cambiado a minúsculas
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
       model: 'profesores',
-      key: 'id'
+      key: 'id'  // Esto permanece igual
     }
   },
-  MateriaID: {
+  materiaid: {  // Cambiado a minúsculas
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
       model: 'materias',
-      key: 'MateriaID'
+      key: 'materiaid'  // Cambiado a minúsculas
     }
   },
-  fechaInicio: {
+  fechainicio: {
     type: DataTypes.TIME,
     allowNull: true
   },
-  fechaFin: {  
+  fechafin: {  
     type: DataTypes.TIME,
     allowNull: true
   }
@@ -51,5 +50,4 @@ const TablaHorario = db.define('horarios', {
   timestamps: false
 });
 
-  
 export default TablaHorario;

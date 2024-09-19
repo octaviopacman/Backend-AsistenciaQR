@@ -6,12 +6,12 @@ import { DataTypes } from "sequelize";
 
 // Modelo para la tabla 'materias'
 const TablaMateria = db.define('materias', {
-    MateriaID: {
+    materiaid: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true
     },
-    NombreMateria: {
+    nombremateria: {
       type: DataTypes.STRING(255),
       allowNull: false
     }
