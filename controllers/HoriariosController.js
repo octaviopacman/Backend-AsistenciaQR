@@ -10,7 +10,7 @@ function formatTime(time) {
   return time.length === 5 ? time + ":00" : time;
 }
 
-const insertarHorario = async (req, res) => {
+export const insertarHorario = async (req, res) => {
   const { nombreProfesor, nombreCurso, nombreMateria, dia, fechaInicio, fechaFin } = req.body;
   try {
     // Buscar el ProfesorID
@@ -20,14 +20,21 @@ const insertarHorario = async (req, res) => {
     }
 
     // Buscar el CursoID
-    const [anio, division] = nombreCurso.split(' ');
-    const curso = await TablaCurso.findOne({ where: { Anio: anio, Division: division } });
+    const [anioTexto, division] = nombreCurso.split(' ');
+    const anio = parseInt(anioTexto);  // Convertir "1ro" a 1
+
+    const curso = await TablaCurso.findOne({
+      attributes: ['cursoid', 'anio', 'division'],  // Usa los nombres de columnas en minúsculas
+      where: { anio: anio, division: division }
+    });
+    console.log('Curso ID:', curso.cursoid);
+
     if (!curso) {
       return res.status(404).json({ error: 'Curso no encontrado' });
     }
 
     // Buscar el MateriaID
-    const materia = await TablaMateria.findOne({ where: { NombreMateria: nombreMateria } });
+    const materia = await TablaMateria.findOne({ where: { nombremateria: nombreMateria } });
     if (!materia) {
       return res.status(404).json({ error: 'Materia no encontrada' });
     }
@@ -39,16 +46,21 @@ const insertarHorario = async (req, res) => {
     console.log('Feeecha Inicio:', formattedFechaInicio);
     console.log('Feeecha Fin:', formattedFechaFin);
 
+    console.log('Profesor encontrado:', profesor);
+    console.log('Curso encontrado:', curso);
+    console.log('Materia encontrada:', materia);
+
     // Insertar el nuevo horario
     const nuevoHorario = await TablaHorario.create({
-      ProfesorID: profesor.id,
-      CursoID: curso.CursoID,
-      MateriaID: materia.MateriaID,
-      Dia: dia,
-      fechaInicio: formattedFechaInicio,
-      fechaFin: formattedFechaFin
+      profesorid: profesor.id,  // profesor.id debería estar correcto
+      cursoid: curso.cursoid,   // curso.cursoid debería estar correcto
+      materiaid: materia.materiaid,  // materia.materiaid debería estar correcto
+      dia: dia,
+      fechainicio: formattedFechaInicio,
+      fechafin: formattedFechaFin
     });
-
+    
+    
     return res.status(201).json({ message: 'Horario insertado exitosamente', nuevoHorario });
   } catch (error) {
     console.error('Error al insertar el horario:', error);
@@ -56,8 +68,58 @@ const insertarHorario = async (req, res) => {
   }
 };
 
+export const mostrarhorarioprofesor = async (req, res) => {
+  try {
+    const { nombre, apellido } = req.params;
 
-export default insertarHorario;
+    // Buscar el profesor por nombre y apellido
+    const profesor = await TablaProfesor.findOne({
+      where: { nombre: nombre, apellido: apellido }
+    });
+
+    if (!profesor) {
+      return res.status(404).json({ error: 'Profesor no encontrado' });
+    }
+
+    // Obtener los horarios del profesor
+    const horarios = await TablaHorario.findAll({
+      where: { profesorid: profesor.id },
+      include: [{ model: TablaCurso }, { model: TablaMateria }]
+    });
+
+    return res.json(horarios);
+  } catch (error) {
+    console.error('Error al obtener horarios:', error);
+    return res.status(500).json({ error: 'Error al obtener horarios' });
+  }
+}
+
+export const mostrarhorariocurso = async (req, res) => {
+  try {
+    const { anio, division } = req.params;
+
+    // Buscar el curso por anio y división
+    const curso = await TablaCurso.findOne({
+      where: { anio: anio, division: division }
+    });
+
+    if (!curso) {
+      return res.status(404).json({ error: 'Curso no encontrado' });
+    }
+
+    // Obtener los horarios del curso
+    const horarios = await TablaHorario.findAll({
+      where: { cursoid: curso.cursoid },
+      include: [{ model: TablaProfesor }, { model: TablaMateria }]
+    });
+
+    return res.json(horarios);
+  } catch (error) {
+    console.error('Error al obtener horarios:', error);
+    return res.status(500).json({ error: 'Error al obtener horarios' });
+  }
+
+}
 
 
 

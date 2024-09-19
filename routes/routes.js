@@ -3,7 +3,7 @@ import { createprofesor, deleteprofesor, getAllprofesores, getprofesor, updatepr
 import login from '../controllers/LoginController.js';
 import { contarAsistenciasEinasistencias, registrarAsistencia } from '../controllers/AsistenciaController.js';
 import { ListadoCursos } from '../controllers/CursosController.js';
-import insertarHorario from '../controllers/HoriariosController.js'
+import {insertarHorario, mostrarhorariocurso, mostrarhorarioprofesor} from '../controllers/HoriariosController.js'
 import {insertarMateria, ListadoMaterias} from '../controllers/MateriasController.js'
 
 const router = express.Router();
@@ -28,6 +28,8 @@ router.post('/login', login);  // Maneja el login
 
 /* ruta para horarios*/
 router.post('/insertar/horario', insertarHorario);
+router.get('/listado/horario/profesor', mostrarhorarioprofesor);
+router.get('/listado/horario/curso', mostrarhorariocurso);
 
 /* ruta para materias */
 router.post('/insertar/materias', insertarMateria);
