@@ -10,7 +10,7 @@ function formatTime(time) {
   return time.length === 5 ? time + ":00" : time;
 }
 
-const insertarHorario = async (req, res) => {
+export const insertarHorario = async (req, res) => {
   const { nombreProfesor, nombreCurso, nombreMateria, dia, fechaInicio, fechaFin } = req.body;
   try {
     // Buscar el ProfesorID
@@ -68,8 +68,58 @@ const insertarHorario = async (req, res) => {
   }
 };
 
+export const mostrarhorarioprofesor = async (req, res) => {
+  try {
+    const { nombre, apellido } = req.params;
 
-export default insertarHorario;
+    // Buscar el profesor por nombre y apellido
+    const profesor = await TablaProfesor.findOne({
+      where: { nombre: nombre, apellido: apellido }
+    });
+
+    if (!profesor) {
+      return res.status(404).json({ error: 'Profesor no encontrado' });
+    }
+
+    // Obtener los horarios del profesor
+    const horarios = await TablaHorario.findAll({
+      where: { profesorid: profesor.id },
+      include: [{ model: TablaCurso }, { model: TablaMateria }]
+    });
+
+    return res.json(horarios);
+  } catch (error) {
+    console.error('Error al obtener horarios:', error);
+    return res.status(500).json({ error: 'Error al obtener horarios' });
+  }
+}
+
+export const mostrarhorariocurso = async (req, res) => {
+  try {
+    const { anio, division } = req.params;
+
+    // Buscar el curso por anio y división
+    const curso = await TablaCurso.findOne({
+      where: { anio: anio, division: division }
+    });
+
+    if (!curso) {
+      return res.status(404).json({ error: 'Curso no encontrado' });
+    }
+
+    // Obtener los horarios del curso
+    const horarios = await TablaHorario.findAll({
+      where: { cursoid: curso.cursoid },
+      include: [{ model: TablaProfesor }, { model: TablaMateria }]
+    });
+
+    return res.json(horarios);
+  } catch (error) {
+    console.error('Error al obtener horarios:', error);
+    return res.status(500).json({ error: 'Error al obtener horarios' });
+  }
+
+}
 
 
 
