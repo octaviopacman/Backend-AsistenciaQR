@@ -55,10 +55,10 @@ export const contarAsistenciasEinasistencias = async (req, res) => {
 
         // Contar asistencias e inasistencias
         const totalAsistencias = await TablaAsistencia.count({
-            where: { ProfesorID: profesorId }
+            where: { profesorid: profesorId }
         });
         const totalInasistencias = await TablaAsistencia.count({
-            where: { ProfesorID: profesorId, inasistencias: true }
+            where: { profesorid: profesorId, inasistencias: true }
         });
 
         return res.status(200).json({

@@ -8,8 +8,15 @@ import login from './controllers/LoginController.js';
 
 const app = express();
 
+const corsOptions = {
+    origin: ['https://proyecto-asistencia-qr.vercel.app', 'https://proyecto-lector-asistencia-qr.vercel.app'],
+    credentials: true // Esto permitirá las credenciales (cookies, etc.)
+};
+
+
 app.use(express.urlencoded({ extended: true }));
 
+/// app.use(cors(corsOptions));
 app.use(cors());
 
 app.use(express.json());
