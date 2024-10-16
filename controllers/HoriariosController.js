@@ -11,30 +11,23 @@ function formatTime(time) {
 }
 
 export const insertarHorario = async (req, res) => {
-  const { nombreProfesor, nombreCurso, nombreMateria, dia, fechaInicio, fechaFin } = req.body;
+  const { profesorId, cursoId, materiaId, dia, fechaInicio, fechaFin } = req.body;
+
   try {
-    // Buscar el ProfesorID
-    const profesor = await TablaProfesor.findOne({ where: { nombre: nombreProfesor } });
+    // Buscar el Profesor por ID
+    const profesor = await TablaProfesor.findByPk(profesorId);
     if (!profesor) {
       return res.status(404).json({ error: 'Profesor no encontrado' });
     }
 
-    // Buscar el CursoID
-    const [anioTexto, division] = nombreCurso.split(' ');
-    const anio = parseInt(anioTexto);  // Convertir "1ro" a 1
-
-    const curso = await TablaCurso.findOne({
-      attributes: ['cursoid', 'anio', 'division'],  // Usa los nombres de columnas en minúsculas
-      where: { anio: anio, division: division }
-    });
-    console.log('Curso ID:', curso.cursoid);
-
+    // Buscar el Curso por ID
+    const curso = await TablaCurso.findByPk(cursoId);
     if (!curso) {
       return res.status(404).json({ error: 'Curso no encontrado' });
     }
 
-    // Buscar el MateriaID
-    const materia = await TablaMateria.findOne({ where: { nombremateria: nombreMateria } });
+    // Buscar la Materia por ID
+    const materia = await TablaMateria.findByPk(materiaId);
     if (!materia) {
       return res.status(404).json({ error: 'Materia no encontrada' });
     }
@@ -43,24 +36,16 @@ export const insertarHorario = async (req, res) => {
     const formattedFechaInicio = formatTime(fechaInicio);  // Formatear a HH:MM:SS
     const formattedFechaFin = formatTime(fechaFin);        // Formatear a HH:MM:SS
 
-    console.log('Feeecha Inicio:', formattedFechaInicio);
-    console.log('Feeecha Fin:', formattedFechaFin);
-
-    console.log('Profesor encontrado:', profesor);
-    console.log('Curso encontrado:', curso);
-    console.log('Materia encontrada:', materia);
-
     // Insertar el nuevo horario
     const nuevoHorario = await TablaHorario.create({
-      profesorid: profesor.id,  // profesor.id debería estar correcto
-      cursoid: curso.cursoid,   // curso.cursoid debería estar correcto
-      materiaid: materia.materiaid,  // materia.materiaid debería estar correcto
+      profesorid: profesorId,
+      cursoid: cursoId,
+      materiaid: materiaId,
       dia: dia,
       fechainicio: formattedFechaInicio,
       fechafin: formattedFechaFin
     });
-    
-    
+
     return res.status(201).json({ message: 'Horario insertado exitosamente', nuevoHorario });
   } catch (error) {
     console.error('Error al insertar el horario:', error);
@@ -68,14 +53,13 @@ export const insertarHorario = async (req, res) => {
   }
 };
 
+
 export const mostrarhorarioprofesor = async (req, res) => {
   try {
-    const { nombre, apellido } = req.params;
+    const { profesorId } = req.body;
 
-    // Buscar el profesor por nombre y apellido
-    const profesor = await TablaProfesor.findOne({
-      where: { nombre: nombre, apellido: apellido }
-    });
+    // Buscar el profesor por ID
+    const profesor = await TablaProfesor.findByPk(profesorId);
 
     if (!profesor) {
       return res.status(404).json({ error: 'Profesor no encontrado' });
@@ -83,7 +67,7 @@ export const mostrarhorarioprofesor = async (req, res) => {
 
     // Obtener los horarios del profesor
     const horarios = await TablaHorario.findAll({
-      where: { profesorid: profesor.id },
+      where: { profesorid: profesorId },
       include: [{ model: TablaCurso }, { model: TablaMateria }]
     });
 
@@ -92,16 +76,15 @@ export const mostrarhorarioprofesor = async (req, res) => {
     console.error('Error al obtener horarios:', error);
     return res.status(500).json({ error: 'Error al obtener horarios' });
   }
-}
+};
+
 
 export const mostrarhorariocurso = async (req, res) => {
   try {
-    const { anio, division } = req.params;
+    const { cursoId } = req.body;
 
-    // Buscar el curso por anio y división
-    const curso = await TablaCurso.findOne({
-      where: { anio: anio, division: division }
-    });
+    // Buscar el curso por ID
+    const curso = await TablaCurso.findByPk(cursoId);
 
     if (!curso) {
       return res.status(404).json({ error: 'Curso no encontrado' });
@@ -109,7 +92,7 @@ export const mostrarhorariocurso = async (req, res) => {
 
     // Obtener los horarios del curso
     const horarios = await TablaHorario.findAll({
-      where: { cursoid: curso.cursoid },
+      where: { cursoid: cursoId },
       include: [{ model: TablaProfesor }, { model: TablaMateria }]
     });
 
@@ -118,8 +101,8 @@ export const mostrarhorariocurso = async (req, res) => {
     console.error('Error al obtener horarios:', error);
     return res.status(500).json({ error: 'Error al obtener horarios' });
   }
+};
 
-}
 
 
 

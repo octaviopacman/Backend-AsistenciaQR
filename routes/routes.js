@@ -2,7 +2,7 @@ import express from 'express';
 import { createprofesor, deleteprofesor, getAllprofesores, getprofesor, updateprofesor } from '../controllers/ProfesorController.js';
 import login from '../controllers/LoginController.js';
 import { contarAsistenciasEinasistencias, registrarAsistencia } from '../controllers/AsistenciaController.js';
-import { ListadoCursos } from '../controllers/CursosController.js';
+import { ListadoCursos, crearCurso } from '../controllers/CursosController.js';
 import {insertarHorario, mostrarhorariocurso, mostrarhorarioprofesor} from '../controllers/HoriariosController.js'
 import {insertarMateria, ListadoMaterias} from '../controllers/MateriasController.js'
 
@@ -22,6 +22,8 @@ router.get('/login/contarasistencias/:profesorId', contarAsistenciasEinasistenci
 
 /* Rutas para Cursos */
 router.get('/listado/cursos', ListadoCursos); // todos los cursos
+
+router.post('/crear/curso', crearCurso);// Ruta para crear un curso
 
 /* Ruta de Login */
 router.post('/login', login);  // Maneja el login
