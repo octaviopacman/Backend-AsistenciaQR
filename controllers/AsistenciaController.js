@@ -41,21 +41,39 @@ export const registrarAsistencia = async (req, res) => {
 };
 
 export const contarAsistenciasEinasistencias = async (req, res) => {
-    const { profesorId } = req.params;
+    const { autorizacion } = req.headers; // Obtener el token de los encabezados de la solicitud
+    if (!autorizacion) {
+        return res.status(401).json({ message: 'Token no proporcionado' });
+    }
+
+    const token = autorizacion.split(' ')[1];
+
     try {
+        // Decodificar el token JWT para obtener el ID del profesor
+        const decoded = jwt.verify(token, secretKey);
+        const profesorId = decoded.id;
+
+        // Contar asistencias e inasistencias
         const totalAsistencias = await TablaAsistencia.count({
             where: { ProfesorID: profesorId }
         });
         const totalInasistencias = await TablaAsistencia.count({
             where: { ProfesorID: profesorId, inasistencias: true }
         });
+
         return res.status(200).json({
             message: `Totales de asistencias e inasistencias del profesor con ID ${profesorId}`,
             asistencias: totalAsistencias,
             inasistencias: totalInasistencias
         });
     } catch (error) {
-        console.error('Error al contar asistencias e inasistencias:', error);
-        return res.status(500).json({ message: 'Error al procesar la solicitud' });
+        if (error instanceof jwt.JsonWebTokenError) {
+            // Error si el token es inválido o expirado
+            return res.status(403).json({ message: 'Token inválido o expirado' });
+        } else {
+            // Error general
+            console.error('Error al contar asistencias e inasistencias:', error);
+            return res.status(500).json({ message: 'Error al procesar la solicitud' });
+        }
     }
 };
